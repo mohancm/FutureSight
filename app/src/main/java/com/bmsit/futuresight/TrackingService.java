@@ -2,6 +2,8 @@ package com.bmsit.futuresight;
 
 import android.Manifest;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -9,8 +11,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
+import android.os.Build;
 import android.os.IBinder;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -41,26 +47,45 @@ public class TrackingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        buildNotification();
         loginToFirebase();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            buildNotification();
+        else
+            startForeground(1, new Notification());
     }
 
     //Create the persistent notification//
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void buildNotification() {
+
+        String NOTIFICATION_CHANNEL_ID = "com.bmsit.futuresight";
+        String channelName = "Location Tracking";
+
         String stop = "stop";
         registerReceiver(stopReceiver, new IntentFilter(stop));
         PendingIntent broadcastIntent = PendingIntent.getBroadcast(
                 this, 0, new Intent(stop), PendingIntent.FLAG_UPDATE_CURRENT);
         // Create the persistent notification
-        Notification.Builder builder = new Notification.Builder(this)
+        //Notification.Builder builder = new Notification.Builder(this)
+        NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+        channel.setLightColor(Color.BLUE);
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        assert  manager != null;
+        manager.createNotificationChannel(channel);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        Notification notification = notificationBuilder.setOngoing(true)
+                .setSmallIcon(R.drawable.ic_gps_fixed)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(R.string.tracking_enabled_notif))
-                //Make this notification ongoing so it can’t be dismissed by the user//
-                .setOngoing(true)
+                .setPriority(NotificationManager.IMPORTANCE_MIN)
+                .setCategory(Notification.CATEGORY_SERVICE)
                 .setContentIntent(broadcastIntent)
-                .setSmallIcon(R.drawable.ic_gps_fixed);
-        startForeground(1, builder.build());
+                .build();
+        startForeground(2, notification);
     }
 
     protected BroadcastReceiver stopReceiver = new BroadcastReceiver() {
