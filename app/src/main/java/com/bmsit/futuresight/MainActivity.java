@@ -17,6 +17,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         //Check whether GPS tracking is enabled//
 
@@ -74,7 +75,7 @@ public class MainActivity extends Activity {
 
         Toast.makeText(this, "GPS tracking enabled", Toast.LENGTH_SHORT).show();
 
-        finish();
+        //finish();
     }
 
 
