@@ -8,9 +8,15 @@ import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+
+    Button buttonStart;
+    Button buttonStop;
+
 
     private static final int PERMISSIONS_REQUEST = 100;
 
@@ -18,6 +24,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        buttonStart = findViewById(R.id.buttonView);
+        buttonStop = findViewById(R.id.buttonView);
 
         //Check whether GPS tracking is enabled//
 
@@ -35,7 +44,14 @@ public class MainActivity extends Activity {
         //If the location permission has been granted, then start the TrackerService//
 
         if (permission == PackageManager.PERMISSION_GRANTED) {
-            startTrackerService();
+            //startTrackerService();
+
+            buttonStart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startTrackerService();
+                }
+            });
         } else {
 
             //If the app doesn’t currently have access to the user’s location, then request access//
@@ -44,6 +60,8 @@ public class MainActivity extends Activity {
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST);
         }
+
+        //buttonStart.setOnClickListener();
     }
 
     @Override
@@ -75,7 +93,7 @@ public class MainActivity extends Activity {
 
         Toast.makeText(this, "GPS tracking enabled", Toast.LENGTH_SHORT).show();
 
-        //finish();
+        finish();
     }
 
 
