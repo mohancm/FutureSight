@@ -10,6 +10,8 @@ import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -62,6 +64,31 @@ public class MainActivity extends Activity {
         }
 
         //buttonStart.setOnClickListener();
+
+
+        SeekBar seekBar = findViewById(R.id.seekBar2);
+        if (seekBar != null) {
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    // Write code to perform some action when progress is changed.
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    // Write code to perform some action when touch is started.
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    // Write code to perform some action when touch is stopped.
+                    TextView startText = findViewById(R.id.textViewStart);
+                    startText.setText("" + seekBar.getProgress());
+                    Toast.makeText(MainActivity.this, "Current value is set to : " + seekBar.getProgress(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
     }
 
     @Override
