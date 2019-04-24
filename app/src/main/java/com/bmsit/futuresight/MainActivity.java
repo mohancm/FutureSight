@@ -14,6 +14,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class MainActivity extends Activity {
 
     Button buttonStart;
@@ -29,6 +32,10 @@ public class MainActivity extends Activity {
 
         buttonStart = findViewById(R.id.buttonView);
         buttonStop = findViewById(R.id.buttonView);
+
+        final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference mSeekbar = rootRef.child("slider");
+        //final String seekProgress = "seeking";
 
         //Check whether GPS tracking is enabled//
 
@@ -72,6 +79,10 @@ public class MainActivity extends Activity {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     // Write code to perform some action when progress is changed.
+                    int seekValue = seekBar.getProgress();
+                    mSeekbar.child("value").setValue(String.valueOf(seekValue));
+                    //rootRef.setValue(seekProgress);
+
                 }
 
                 @Override
@@ -85,6 +96,8 @@ public class MainActivity extends Activity {
                     TextView startText = findViewById(R.id.textViewStart);
                     startText.setText("" + seekBar.getProgress());
                     Toast.makeText(MainActivity.this, "Current value is set to : " + seekBar.getProgress(), Toast.LENGTH_SHORT).show();
+
+
                 }
             });
         }
