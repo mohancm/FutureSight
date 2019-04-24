@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ public class MainActivity extends Activity {
 
     Button buttonStart;
     Button buttonStop;
+    EditText locationSearch;
 
 
     private static final int PERMISSIONS_REQUEST = 100;
@@ -35,6 +37,7 @@ public class MainActivity extends Activity {
 
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         final DatabaseReference mSeekbar = rootRef.child("slider");
+        final DatabaseReference mSearchBar = rootRef.child("search");
         //final String seekProgress = "seeking";
 
         //Check whether GPS tracking is enabled//
@@ -59,6 +62,12 @@ public class MainActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     startTrackerService();
+
+                    // Search location
+                    locationSearch = findViewById(R.id.SearchBox);
+                    String locationsData = locationSearch.getText().toString();
+                    mSearchBar.child("locations").setValue(String.valueOf(locationsData));
+
                 }
             });
         } else {
@@ -135,6 +144,5 @@ public class MainActivity extends Activity {
 
         finish();
     }
-
 
 }
