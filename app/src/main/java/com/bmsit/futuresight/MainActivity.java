@@ -91,7 +91,6 @@ public class MainActivity extends Activity {
                     int seekValue = seekBar.getProgress();
                     mSeekbar.child("value").setValue(String.valueOf(seekValue));
                     //rootRef.setValue(seekProgress);
-
                 }
 
                 @Override
