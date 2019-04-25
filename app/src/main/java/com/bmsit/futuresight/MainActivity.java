@@ -5,9 +5,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
     Button buttonStart;
     Button buttonStop;
     EditText locationSearch;
+    int seekValue;
 
 
     private static final int PERMISSIONS_REQUEST = 100;
@@ -64,9 +65,11 @@ public class MainActivity extends Activity {
                     startTrackerService();
 
                     // Search location
-                    locationSearch = findViewById(R.id.SearchBox);
+                    locationSearch = findViewById(R.id.searchBox);
                     String locationsData = locationSearch.getText().toString();
-                    mSearchBar.child("locations").setValue(String.valueOf(locationsData));
+                    mSearchBar.child("locations").setValue(locationsData);
+
+                    mSeekbar.child("value").setValue(String.valueOf(seekValue));
 
                 }
             });
@@ -88,8 +91,8 @@ public class MainActivity extends Activity {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     // Write code to perform some action when progress is changed.
-                    int seekValue = seekBar.getProgress();
-                    mSeekbar.child("value").setValue(String.valueOf(seekValue));
+                    seekValue = seekBar.getProgress();
+                    //mSeekbar.child("value").setValue(String.valueOf(seekValue));
                     //rootRef.setValue(seekProgress);
                 }
 
